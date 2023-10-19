@@ -33,6 +33,7 @@ class CombosStat(object):
                  sep: str = '\t',
                  start_col: int = 1,
                  show_progress: Optional[bool] = True,
+                 **kwargs,
                  ):
         self.input_file = input_file
         self.output_file = pathlib.Path(output_file)

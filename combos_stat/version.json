@@ -1,6 +1,6 @@
 {
     "prog": "combos_stat",
-    "desc": "",
+    "desc": "A utility tool to compute shared data statistics for given combinations of data samples",
     "url": "https://github.com/suqingdong/combos_stat",
     "author": "suqingdong",
     "author_email": "suqingdong1114@gmail.com",

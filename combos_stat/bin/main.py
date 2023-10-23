@@ -3,7 +3,7 @@ import click
 from combos_stat import version_info
 from ._stat import main as stat_cli
 from ._plot import main as plot_cli
-from ._job import main as job_cli
+from ._batch import main as batch_cli
 
 
 CONTEXT_SETTINGS = dict(
@@ -28,7 +28,7 @@ def cli(**kwargs):
 def main():
     cli.add_command(stat_cli)
     cli.add_command(plot_cli)
-    cli.add_command(job_cli)
+    cli.add_command(batch_cli)
     cli()
 
 

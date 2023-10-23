@@ -15,7 +15,7 @@ examples:
 @click.command(
     name='stat',
     no_args_is_help=True,
-    help=click.style('Calculate statistics', italic=True, fg='blue'),
+    help=click.style('Calculate statistics for shared data counts based on combinations of samples.', italic=True, fg='blue'),
     epilog=__epilog__,
 )
 @click.option('-i', '--input-file', help='Path to the input data file', type=click.Path(exists=True), required=True)
@@ -26,5 +26,9 @@ examples:
 @click.option('--sep', help='Delimiter to use for reading the input file (e.g., "\\t" for tab)', default='\t')
 @click.option('--start-col', help='Column index to start reading sample data from', default=1, show_default=True, type=int)
 @click.option('--show-process', help='Show process', is_flag=True)
+@click.option('--chunksize', help='The chunksize', type=int)
+@click.option('--chunk', help='The chunk', type=int)
 def main(**kwargs):
-    CombosStat(**kwargs).execute()
+    combos = CombosStat(**kwargs)
+    results = combos.compute()
+    combos.save(results, kwargs['output_file'])

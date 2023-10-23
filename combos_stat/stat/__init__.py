@@ -1,7 +1,7 @@
 import math
 import itertools
 import pathlib
-from typing import Iterable, Literal, Optional, Tuple, Set, Dict
+from typing import Iterable, Literal, Optional, Tuple, Union, Set, Dict
 
 import tqdm
 import pandas as pd
@@ -26,24 +26,28 @@ class CombosStat(object):
 
     def __init__(self,
                  input_file: str,
-                 output_file: str,
                  num_samples: int,
                  share_type: Literal['intersection', 'union'],
                  header: Optional[int] = 0,
                  sep: str = '\t',
                  start_col: int = 1,
                  show_progress: Optional[bool] = True,
+                 chunksize: Optional[int] = None,
+                 chunk: Optional[int] = None,
                  **kwargs,
                  ):
         self.input_file = input_file
-        self.output_file = pathlib.Path(output_file)
         self.num_samples = num_samples
         self.share_type = share_type
         self.header = header
         self.sep = sep
         self.start_col = start_col
         self.show_progress = show_progress
+        self.chunksize = chunksize
+        self.chunk = chunk
+
         self.logger = SimpleLogger('CombosStat')
+        self.combinations_length = None
 
     def load_data(self) -> Tuple[Dict[str, Set[int]], Iterable[Tuple], int]:
         """
@@ -53,21 +57,27 @@ class CombosStat(object):
             Tuple containing:
                 - data_sets (Dict[str, Set[int]]): Dictionary with sample names as keys and corresponding data sets as values.
                 - sample_combinations (Iterable[Tuple]): Combinations of sample names.
-                - total_combinations (int): Total number of sample combinations.
         """
-        self.logger.info(f'load data from file: {self.input_file}')
+        self.sep = '\t' if self.sep == '\\t' else self.sep
 
-        df = pd.read_csv(self.input_file, header=self.header, sep=self.sep)
+        if self.chunk and self.chunksize:
+            self.logger.info(f'load data from file: {self.input_file} [chunk: {self.chunk}, chunksize: {self.chunksize}]')
+            chunks = pd.read_csv(self.input_file, header=self.header, sep=self.sep, chunksize=self.chunksize)
+            df = next(itertools.islice(chunks, self.chunk - 1, None))
+        else:
+            self.logger.info(f'load data from file: {self.input_file}')
+            df = pd.read_csv(self.input_file, header=self.header, sep=self.sep)
+
         samples = df.columns[self.start_col:]
         combinations = itertools.combinations(samples, self.num_samples)
-        combinations_length = math.comb(len(samples), self.num_samples)
+        self.combinations_length = math.comb(len(samples), self.num_samples)
 
         # Compute the set of positions where data > 0 for each sample
         data_sets = {
             sample: set(df[df[sample] > 0].index) for sample in samples
         }
 
-        return data_sets, combinations, combinations_length
+        return data_sets, combinations
 
     def count_shared(self, sample_sets: Iterable[Set[int]]) -> int:
         """
@@ -100,24 +110,42 @@ class CombosStat(object):
             sample_sets = [data_sets[sample] for sample in combination]
             yield self.count_shared(sample_sets)
 
-    def write_output(self, results, combinations_length):
+    def compute(self) -> Iterable[int]:
         """
-        Write the shared data counts to the output file. Optionally display a progress bar.
+        Compute shared data counts for each combination of samples.
+
+        This method processes combinations of samples from the input data and calculates 
+        the shared data counts based on the specified share type (intersection or union). 
+        The results are returned as an iterable of integers, where each integer represents 
+        the shared data count for a specific combination.
+
+        Returns:
+            Iterable[int]: Shared data counts for each combination of samples.
+        """
+        data_sets, combinations = self.load_data()
+        results = self.process_combinations(data_sets, combinations)
+        return results
+
+    def save(self, results: Iterable[int], output_file: str):
+        """
+        Save the computed results to a specified output file.
 
         Args:
-            results (Iterable[int]): Shared data counts for each combination.
-            total_combinations (int): Total number of sample combinations.
+            results (Iterable[int]): The computed shared data counts for each combination.
+            output_file (str): The path to the output file where the results should be saved.
         """
-        self.logger.debug('Writing results...')
+        self.logger.debug('start saving result ...')
+
 
         if self.show_progress:
-            results = tqdm.tqdm(results, desc='Processing combinations',
-                                unit='lines', total=combinations_length)
+            results = tqdm.tqdm(results, desc='Processing combinations', unit='lines', total=self.combinations_length)
 
-        self.output_file.parent.mkdir(parents=True, exist_ok=True)
+        output_path = pathlib.Path(output_file)
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         buffer_size = 1000
         buffer = []
-        with self.output_file.open('w') as f:
+        with output_path.open('w') as f:
             for result in results:
                 buffer.append(f'{result}\n')
                 if len(buffer) >= buffer_size:
@@ -125,22 +153,18 @@ class CombosStat(object):
                     buffer.clear()
             f.writelines(buffer)
 
-        self.logger.info(f'Results saved to: {self.output_file}')
-
-    def execute(self):
-        """
-        Main execution method to load data, process combinations, and save results to the output file.
-        """
-        data_sets, combinations, combinations_length = self.load_data()
-        results = self.process_combinations(data_sets, combinations)
-        self.write_output(results, combinations_length)
+        self.logger.info(f'saved to file: {output_path}')
 
 
 if __name__ == '__main__':
-    CombosStat(
-        input_file='tests/demo.stat',
-        output_file='out.txt',
-        num_samples=3,
-        share_type='union',
-        show_progress=True,
-    ).execute()
+    combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection')
+    combos.logger.debug('start normal mode')
+    results = combos.compute()
+    list(results)
+    combos.logger.debug('complete normal mode')
+
+    combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection', chunksize=100, chunk=20)
+    combos.logger.debug('start chunk mode')
+    results = combos.compute()
+    list(results)
+    combos.logger.debug('complete chunk mode')

@@ -1,6 +1,8 @@
 import string
 
 R_CODE_TPL = string.Template('''\
+options(warn=-1)
+
 library(ggplot2)
 
 # 读取预处理后的数据
@@ -24,7 +26,10 @@ p <- ggplot(data, aes(x=as.factor(share_count), y=mean, fill=share_type)) +
 
 # 保存图片
 ggsave(filename='${output}.png', plot=p, dpi=${dpi}, type='cairo', width=${width}, height=${height})
+cat('\x1b[32msaved png file to: ${output}.png\x1b[0m\n')
+
 ggsave(filename='${output}.pdf', plot=p, dpi=${dpi}, width=${width}, height=${height})
+cat('\x1b[32msaved pdf file to: ${output}.pdf\x1b[0m\n')
 ''')
 
 

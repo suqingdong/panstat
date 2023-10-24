@@ -5,6 +5,8 @@ import textwrap
 
 from combos_stat.plot.boxplot_tpl import generate_r_code
 from combos_stat.plot.process_data import stat_from_result
+from combos_stat import util
+
 
 
 __epilog__ = click.style('''\n
@@ -14,6 +16,16 @@ examples:
     combos_stat plot out/result
     combos_stat plot out/result --write boxplot.R
     combos_stat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
+                         
+default options:
+    infile = 'processed_stats.tsv'
+    output = 'boxplot'
+    x_lab = 'Genomes'
+    y_lab = 'Families'
+    title = 'BoxPlot'
+    dpi = 300
+    width = 14
+    height = 7
 ''', fg='green')
 
 @click.command(
@@ -29,18 +41,21 @@ examples:
 def main(**kwargs):
     r_script = kwargs['rscript']
 
-    stat_from_result(kwargs['result_dir'])
-
     options = dict(option.split('=') for option in kwargs['option'])
+    processed_file = options.get('infile', 'processed_stats.tsv')
+
+    stat_from_result(kwargs['result_dir'], outfile=processed_file)
     r_code = generate_r_code(**options)
 
     if kwargs['write']:
         with open(kwargs['write'], 'w') as f:
             f.write(r_code)
+        util.logger.debug(f'saved R code to: {kwargs["write"]}')
 
-    cmd = textwrap.dedent(f'''{r_script} - <<EOF
-    {r_code}EOF
-    ''')
+    cmd = textwrap.dedent(f'''
+    {r_script} - <<EOF
+        {r_code}EOF
+    ''').strip()
     try:
         assert not os.system(cmd)
     except Exception as e:

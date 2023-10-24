@@ -11,7 +11,7 @@ combos_stat -h
 ```
 
 ### *`1. stat`*
-```bash
+```
 Usage: python -m combos_stat.bin.main stat [OPTIONS]
 
   Calculate statistics for shared data counts based on combinations of samples.
@@ -38,21 +38,37 @@ examples:
 ```
 
 ### *`2. plot`*
-```
+```bash
 Usage: python -m combos_stat.bin.main plot [OPTIONS] RESULT_DIR
 
-  Plot statistics
+  Generate Boxplot with statistics results
 
 Options:
   -R, --Rscript TEXT  Path to the executable Rscript  [default: Rscript]
   -w, --write TEXT    Write the R code to a file
-  -?, -h, --help      Show this message and exit.
+  --option TEXT       Options in the format key=value for boxplot, eg. title="Demo Stats", x_lab="Shared_Numbers",
+                      y_lab="Data"
+  -h, -?, --help      Show this message and exit.
+
   
 
 examples:
     combos_stat plot -h
     combos_stat plot out/result
+    combos_stat plot out/result --write boxplot.R
+    combos_stat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
+                          
+default options:
+    infile = 'processed_stats.tsv'
+    output = 'boxplot'
+    x_lab = 'Genomes'
+    y_lab = 'Families'
+    title = 'BoxPlot'
+    dpi = 300
+    width = 14
+    height = 7
 ```
+
 
 ### *`3. batch`*
 ```bash
@@ -76,4 +92,3 @@ examples:
     combos_stat batch -i input.txt -t 200000 -O out
     combos_stat batch -i input.txt -t 200000 --job run.job
 ```
-

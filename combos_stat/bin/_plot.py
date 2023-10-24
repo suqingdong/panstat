@@ -57,6 +57,7 @@ def main(**kwargs):
         {r_code}EOF
     ''').strip()
     try:
+        util.logger.debug(f'Drawing boxplot ...')
         assert not os.system(cmd)
     except Exception as e:
         print('ERROR', e)

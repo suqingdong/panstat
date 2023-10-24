@@ -10,7 +10,8 @@ data <- read.csv('${infile}', sep='\\t', check.names=F)
 p <- ggplot(data, aes(x=as.factor(share_count), y=mean, fill=share_type)) +
      geom_boxplot(
         aes(ymin=min, lower=p25, middle=p50, upper=p75, ymax=max),
-        stat='identity'
+        stat='identity',
+        position='identity'
     ) + 
     geom_smooth(aes(y=mean, group=share_type, color=share_type), method='auto', span=1, se=F) + # 添加平滑曲线
     labs(x='${x_lab}', y='${y_lab}', title='${title}') +

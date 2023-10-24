@@ -94,6 +94,6 @@ def generate_plot_shell(result_dir: Path, shell_dir: Path):
     """
 
     plot_shell = shell_dir / 'plot.sh'
-    cmd = f'combos_stat plot {result_dir}'
+    cmd = f'combos_stat plot {result_dir} --write boxplot.R'
     plot_shell.write_text(cmd)
     return plot_shell

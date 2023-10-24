@@ -10,7 +10,6 @@ def stat_from_result(result_dir: str):
     final_df = pd.DataFrame(columns=columns)
 
     for p in (result_dir.glob('[xy]*')):
-        print(p.name)
         share_type = p.name[0]
         share_type = 'core' if share_type == 'x' else 'span'
         share_count = p.name[1:]
@@ -28,5 +27,4 @@ def stat_from_result(result_dir: str):
 
         final_df = pd.concat([final_df, pd.DataFrame([lines], columns=columns)])
 
-    print(final_df)
     final_df.to_csv('processed_stats.tsv', sep='\t', index=False)

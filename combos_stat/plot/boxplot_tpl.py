@@ -29,12 +29,13 @@ ggsave(filename='${output}.pdf', plot=p, dpi=${dpi}, width=${width}, height=${he
 
 
 def generate_r_code(infile='processed_stats.tsv',
-                      output='boxplot',
-                      x_lab='Genomes',
-                      y_lab='Families',
-                      title='BoxPlot',
-                      dpi=300,
-                      width=14,
-                      height=7):
+                    output='boxplot',
+                    x_lab='Genomes',
+                    y_lab='Families',
+                    title='BoxPlot',
+                    dpi=300,
+                    width=14,
+                    height=7,
+                    **kwargs):
     script = R_CODE_TPL.substitute(**locals())
     return script

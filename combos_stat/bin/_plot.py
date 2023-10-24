@@ -12,25 +12,27 @@ __epilog__ = click.style('''\n
 examples:
     combos_stat plot -h
     combos_stat plot out/result
-                         
+    combos_stat plot out/result --write boxplot.R
+    combos_stat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
 ''', fg='green')
 
 @click.command(
     name='plot',
     no_args_is_help=True,
-    help=click.style('Plot statistics', italic=True, fg='blue'),
+    help=click.style('Generate Boxplot with statistics results', italic=True, fg='blue'),
     epilog=__epilog__,
 )
 @click.argument('result_dir')
 @click.option('-R', '--Rscript', help='Path to the executable Rscript', default='Rscript', show_default=True)
 @click.option('-w', '--write', help='Write the R code to a file')
+@click.option('--option', help='Options in the format key=value for boxplot, eg. title="Demo Stats", x_lab="Shared_Numbers", y_lab="Data"', multiple=True)
 def main(**kwargs):
-
-    r_script = kwargs['Rscript']
+    r_script = kwargs['rscript']
 
     stat_from_result(kwargs['result_dir'])
 
-    r_code = generate_r_code()
+    options = dict(option.split('=') for option in kwargs['option'])
+    r_code = generate_r_code(**options)
 
     if kwargs['write']:
         with open(kwargs['write'], 'w') as f:
@@ -42,5 +44,4 @@ def main(**kwargs):
     try:
         assert not os.system(cmd)
     except Exception as e:
-        print(r_code)
-        print(e)
+        print('ERROR', e)

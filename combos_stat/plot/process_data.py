@@ -31,26 +31,27 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv'):
     util.logger.debug(f'stat from result dir: {result_dir}')
 
     columns = 'share_count share_type mean min p25 p50 p75 max'.split()
-    final_df = pd.DataFrame(columns=columns)
 
-    for p in (result_dir.glob('[xy]*')):
-        share_type = p.name[0]
-        share_type = 'core' if share_type == 'x' else 'span'
-        share_count = p.name[1:]
+    with open(outfile, 'w') as out:
+        out.write('\t'.join(columns) + '\n')
 
-        sum_df = None
-        for file in p.glob('*.txt'):
-            df = pd.read_csv(file, header=None)
-            if sum_df is None:
-                sum_df = df
-            else:
-                sum_df += df
+        for p in (result_dir.glob('[xy]*')):
+            share_type = p.name[0]
+            share_type = 'core' if share_type == 'x' else 'span'
+            share_count = p.name[1:]
 
-        df_stats = sum_df.describe()[0]
-        lines = [share_count, share_type] + df_stats.loc[['mean', 'min', '25%', '50%', '75%', 'max']].to_list()
+            sum_df = None
+            for file in p.glob('*.txt'):
+                df = pd.read_csv(file, header=None)
+                if sum_df is None:
+                    sum_df = df
+                else:
+                    sum_df += df
 
-        final_df = pd.concat([final_df, pd.DataFrame([lines], columns=columns)])
+            df_stats = sum_df.describe()[0]
+            lines = [share_count, share_type] + df_stats.loc[['mean', 'min', '25%', '50%', '75%', 'max']].to_list()
+            out.write('\t'.join(map(str, lines)) + '\n')
 
-    final_df.to_csv(outfile, sep='\t', index=False)
+    util.logger.debug(f'saved aggregated statistics to {outfile}')
 
     return outfile

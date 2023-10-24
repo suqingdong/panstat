@@ -135,7 +135,6 @@ class CombosStat(object):
         """
         util.logger.debug('start saving result ...')
 
-
         if self.show_progress:
             results = tqdm.tqdm(results, desc='Processing combinations', unit='lines', total=self.combinations_length)
 

@@ -5,10 +5,8 @@ options(warn=-1)
 
 library(ggplot2)
 
-# 读取预处理后的数据
 data <- read.csv('${infile}', sep='\\t', check.names=F)
 
-# 绘制箱线图
 p <- ggplot(data, aes(x=as.factor(share_count), y=mean, fill=share_type)) +
      geom_boxplot(
         aes(ymin=min, lower=p25, middle=p50, upper=p75, ymax=max),
@@ -24,7 +22,6 @@ p <- ggplot(data, aes(x=as.factor(share_count), y=mean, fill=share_type)) +
         axis.line=element_line(colour ='black')
     )
 
-# 保存图片
 ggsave(filename='${output}.png', plot=p, dpi=${dpi}, type='cairo', width=${width}, height=${height})
 cat('\\x1b[32msaved png file to: ${output}.png\\x1b[0m\\n')
 

@@ -1,5 +1,5 @@
 import math
-import pathlib
+from pathlib import Path
 import textwrap
 from typing import List, Dict
 
@@ -9,10 +9,6 @@ def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, i
     Calculate the dynamic chunk size for each group size based on a threshold.
 
     """
-    if threshold < 1000:
-        threshold = 1000
-        print(f'WARNING: The threshold for dynamic chunking is set to {threshold}')
-
     num_samples = list(range(2, sample_count + 1))
     combinations = [math.comb(sample_count, i) for i in num_samples]
 
@@ -21,9 +17,13 @@ def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, i
     return dict(zip(num_samples, chunkcounts))
 
 
-
-
-def generate_shell(chunkcounts, total_lines, input_file, output_dir, start_col, sep):
+def generate_stat_shell(chunkcounts: Dict[int, int],
+                   total_lines: int,
+                   input_file: str,
+                   shell_dir: Path,
+                   result_dir: Path,
+                   start_col: int,
+                   sep: str):
     if sep == '\t':
         sep = r'\\t'
 
@@ -31,15 +31,15 @@ def generate_shell(chunkcounts, total_lines, input_file, output_dir, start_col, 
         chunksize = math.ceil(total_lines / chunkcount) if chunkcount > 1 else 0
 
         for chunk in range(1, chunkcount + 1):
-            # print(f'num_samples: {num_samples}: chunk: {chunk}, chunksize: {chunksize}')
+            print(f'>>> num_samples: {num_samples}: chunk: {chunk}, chunksize: {chunksize}')
             for prefix, share_type in zip('xy', ('union', 'intersection')):
-                output_shell = output_dir / 'shell' / f'{prefix}{num_samples}' / f'stat.{prefix}{num_samples}_{chunk}.sh'
-                output_file = output_dir / 'result' / f'{prefix}{num_samples}' / f'{chunk}.txt'
-                output_shell.parent.mkdir(parents=True, exist_ok=True)
+                stat_shell = shell_dir / f'{prefix}{num_samples}' / f'stat.{prefix}{num_samples}_{chunk}.sh'
+                output_file = result_dir / f'{prefix}{num_samples}' / f'{prefix}{num_samples}_{chunk}.txt'
+                stat_shell.parent.mkdir(parents=True, exist_ok=True)
                 cmd = textwrap.dedent(f'''\
                     python3 -m combos_stat.bin.main stat \\
-                        -i {pathlib.Path(input_file).resolve()} \\
-                        -o {output_file.resolve()} \\
+                        -i {Path(input_file).resolve()} \\
+                        -o {output_file} \\
                         --start-col {start_col} \\
                         --sep {sep} \\
                         -n {num_samples} \\
@@ -47,15 +47,12 @@ def generate_shell(chunkcounts, total_lines, input_file, output_dir, start_col, 
                         --chunksize {chunksize} \\
                         --chunk {chunk}
                 ''')
-                output_shell.write_text(cmd)
-                yield output_shell
+                stat_shell.write_text(cmd)
+                yield stat_shell
 
 
-
-
-
-if __name__ == '__main__':
-    print(dynamic_chunkcount(29, threshold=10000))
-    print(dynamic_chunkcount(29, threshold=50000))
-    print(dynamic_chunkcount(29, threshold=100000))
-    print(dynamic_chunkcount(29, threshold=500000))
+def generate_plot_shell(result_dir: Path, shell_dir: Path):
+    plot_shell = shell_dir / 'plot.sh'
+    cmd = f'python3 -m combos_stat.bin.main plot {result_dir}'
+    plot_shell.write_text(cmd)
+    return plot_shell

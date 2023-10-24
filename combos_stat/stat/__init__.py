@@ -5,7 +5,8 @@ from typing import Iterable, Literal, Optional, Tuple, Union, Set, Dict
 
 import tqdm
 import pandas as pd
-from simple_loggers import SimpleLogger
+
+from combos_stat import util
 
 
 class CombosStat(object):
@@ -21,7 +22,6 @@ class CombosStat(object):
         sep (str): Delimiter to use for reading the input file.
         start_col (int): Column index to start reading sample data from.
         show_progress (bool): Flag to indicate if a progress bar should be displayed.
-        logger (SimpleLogger): Logger instance for logging messages.
     """
 
     def __init__(self,
@@ -46,7 +46,6 @@ class CombosStat(object):
         self.chunksize = chunksize
         self.chunk = chunk
 
-        self.logger = SimpleLogger('CombosStat')
         self.combinations_length = None
 
     def load_data(self) -> Tuple[Dict[str, Set[int]], Iterable[Tuple], int]:
@@ -61,11 +60,11 @@ class CombosStat(object):
         self.sep = '\t' if self.sep == '\\t' else self.sep
 
         if self.chunk and self.chunksize:
-            self.logger.info(f'load data from file: {self.input_file} [chunk: {self.chunk}, chunksize: {self.chunksize}]')
+            util.logger.info(f'load data from file: {self.input_file} [chunk: {self.chunk}, chunksize: {self.chunksize}]')
             chunks = pd.read_csv(self.input_file, header=self.header, sep=self.sep, chunksize=self.chunksize)
             df = next(itertools.islice(chunks, self.chunk - 1, None))
         else:
-            self.logger.info(f'load data from file: {self.input_file}')
+            util.logger.info(f'load data from file: {self.input_file}')
             df = pd.read_csv(self.input_file, header=self.header, sep=self.sep)
 
         samples = df.columns[self.start_col:]
@@ -134,7 +133,7 @@ class CombosStat(object):
             results (Iterable[int]): The computed shared data counts for each combination.
             output_file (str): The path to the output file where the results should be saved.
         """
-        self.logger.debug('start saving result ...')
+        util.logger.debug('start saving result ...')
 
 
         if self.show_progress:
@@ -153,18 +152,18 @@ class CombosStat(object):
                     buffer.clear()
             f.writelines(buffer)
 
-        self.logger.info(f'saved to file: {output_path}')
+        util.logger.info(f'saved to file: {output_path}')
 
 
 if __name__ == '__main__':
     combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection')
-    combos.logger.debug('start normal mode')
+    util.logger.debug('start normal mode')
     results = combos.compute()
     list(results)
-    combos.logger.debug('complete normal mode')
+    util.logger.debug('complete normal mode')
 
     combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection', chunksize=100, chunk=20)
-    combos.logger.debug('start chunk mode')
+    util.logger.debug('start chunk mode')
     results = combos.compute()
     list(results)
-    combos.logger.debug('complete chunk mode')
+    util.logger.debug('complete chunk mode')

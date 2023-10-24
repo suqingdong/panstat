@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={'console_scripts': [
-        'name = combos_stat.bin.main:main',
+        'combos_stat = combos_stat.bin.main:main',
     ]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',

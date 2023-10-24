@@ -3,6 +3,11 @@ from pathlib import Path
 import textwrap
 from typing import List, Dict
 
+from simple_loggers import SimpleLogger
+
+
+logger = SimpleLogger('CombosStat')
+
 
 def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, int]:
     """
@@ -27,11 +32,13 @@ def generate_stat_shell(chunkcounts: Dict[int, int],
     if sep == '\t':
         sep = r'\\t'
 
+    logger.debug(f'{input_file} total_lines: {total_lines}')
+
     for num_samples, chunkcount in chunkcounts.items():
         chunksize = math.ceil(total_lines / chunkcount) if chunkcount > 1 else 0
+        logger.debug(f'>>> num_samples: {num_samples}: chunkcount: {chunkcount}, chunksize: {chunksize}')
 
         for chunk in range(1, chunkcount + 1):
-            print(f'>>> num_samples: {num_samples}: chunk: {chunk}, chunksize: {chunksize}')
             for prefix, share_type in zip('xy', ('union', 'intersection')):
                 stat_shell = shell_dir / f'{prefix}{num_samples}' / f'stat.{prefix}{num_samples}_{chunk}.sh'
                 output_file = result_dir / f'{prefix}{num_samples}' / f'{prefix}{num_samples}_{chunk}.txt'

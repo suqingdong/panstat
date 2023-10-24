@@ -38,7 +38,7 @@ def main(**kwargs):
     header = next(pd.read_csv(input_file, sep=sep, chunksize=1))
     sample_count = header.columns[start_col:].size
 
-    print(f'>>> Found {sample_count} samples in {input_file}')
+    util.logger.debug(f'>>> Found {sample_count} samples in {input_file}')
 
     chunkcounts = util.dynamic_chunkcount(sample_count, threshold=kwargs['threshold'])
 
@@ -74,7 +74,7 @@ def main(**kwargs):
         cmd = f'makejob {makejob_conf} -o {job}'
         if kwargs['no_check']:
             cmd += ' -no'
-        print(f'>>> RUN:  {cmd}')
+        util.logger.debug(f'>>> RUN:  {cmd}')
         assert not os.system(cmd)
 
 

@@ -24,7 +24,6 @@ def cli(**kwargs):
     pass
 
 
-
 def main():
     cli.add_command(stat_cli)
     cli.add_command(plot_cli)

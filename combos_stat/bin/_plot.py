@@ -23,6 +23,7 @@ default options:
     x_lab = 'Genomes'
     y_lab = 'Families'
     title = 'BoxPlot'
+    legend_title = 'Type'
     dpi = 300
     width = 14
     height = 7
@@ -36,7 +37,7 @@ default options:
 )
 @click.argument('result_dir')
 @click.option('-R', '--Rscript', help='Path to the executable Rscript', default='Rscript', show_default=True)
-@click.option('-w', '--write', help='Write the R code to a file')
+@click.option('-w', '--write', help='Write the R code to a file', default='boxplot.R', show_default=True)
 @click.option('--option', help='Options in the format key=value for boxplot, eg. title="Demo Stats", x_lab="Shared_Numbers", y_lab="Data"', multiple=True)
 def main(**kwargs):
     r_script = kwargs['rscript']
@@ -47,16 +48,12 @@ def main(**kwargs):
     stat_from_result(kwargs['result_dir'], outfile=processed_file)
     r_code = generate_r_code(**options)
 
-    if kwargs['write']:
-        with open(kwargs['write'], 'w') as f:
-            f.write(r_code)
-        util.logger.debug(f'saved R code to: {kwargs["write"]}')
-
-    cmd = textwrap.dedent(f'''
-    {r_script} - <<EOF
-        {r_code}EOF
-    ''').strip()
+    with open(kwargs['write'], 'w') as f:
+        f.write(r_code)
+    util.logger.debug(f'saved R code to: {kwargs["write"]}')
+    
     try:
+        cmd = f'{r_script} {kwargs["write"]}'
         util.logger.debug(f'Drawing boxplot ...')
         assert not os.system(cmd)
     except Exception as e:

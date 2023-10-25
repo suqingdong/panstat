@@ -64,6 +64,7 @@ default options:
     x_lab = 'Genomes'
     y_lab = 'Families'
     title = 'BoxPlot'
+    legend_title = 'Type'
     dpi = 300
     width = 14
     height = 7

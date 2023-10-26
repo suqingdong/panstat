@@ -1,6 +1,6 @@
 import click
 
-from combos_stat import version_info
+from combos_stat import version_info, __banner__
 from ._stat import main as stat_cli
 from ._plot import main as plot_cli
 from ._batch import main as batch_cli
@@ -12,9 +12,16 @@ CONTEXT_SETTINGS = dict(
 )
 
 
+help_text = click.style(f'''\n
+\b
+    {__banner__}  v{version_info['version']}
+
+    \x1b[3m{version_info['desc']}
+''', fg='bright_green', bold=True)
+
 @click.group(
     name=version_info['prog'],
-    help=click.style(version_info['desc'], italic=True, fg='green', bold=True),
+    help=help_text,
     context_settings=CONTEXT_SETTINGS,
     no_args_is_help=True,
     epilog=click.style('''contact: {author} <{author_email}>''', fg='yellow').format(**version_info),

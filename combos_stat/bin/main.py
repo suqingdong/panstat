@@ -12,8 +12,8 @@ CONTEXT_SETTINGS = dict(
 )
 
 
-help_text = click.style(f'''\n
-\b
+help_text = click.style(f'''
+\n\b
     {__banner__}  v{version_info['version']}
 
     \x1b[3m{version_info['desc']}

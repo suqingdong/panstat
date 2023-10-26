@@ -23,12 +23,12 @@ def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, i
 
 
 def generate_stat_shell(chunkcounts: Dict[int, int],
-                   total_lines: int,
-                   input_file: str,
-                   shell_dir: Path,
-                   result_dir: Path,
-                   start_col: int,
-                   sep: str):
+                        total_lines: int,
+                        input_file: str,
+                        shell_dir: Path,
+                        result_dir: Path,
+                        start_col: int,
+                        sep: str):
     """
     Generate shell scripts for statistical analysis based on input parameters.
 
@@ -59,7 +59,7 @@ def generate_stat_shell(chunkcounts: Dict[int, int],
         logger.debug(f'>>> num_samples: {num_samples}: chunkcount: {chunkcount}, chunksize: {chunksize}')
 
         for chunk in range(1, chunkcount + 1):
-            for prefix, share_type in zip('xy', ('union', 'intersection')):
+            for prefix, share_type in zip('xy', ('intersection', 'union')):
                 stat_shell = shell_dir / f'{prefix}{num_samples}' / f'stat.{prefix}{num_samples}_{chunk}.sh'
                 output_file = result_dir / f'{prefix}{num_samples}' / f'{prefix}{num_samples}_{chunk}.txt'
                 stat_shell.parent.mkdir(parents=True, exist_ok=True)

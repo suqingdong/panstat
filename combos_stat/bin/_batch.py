@@ -15,6 +15,7 @@ examples:
     combos_stat batch -i input.txt -t 200000 --job run.job
 ''', fg='green')
 
+
 @click.command(
     name='batch',
     no_args_is_help=True,
@@ -40,7 +41,8 @@ def main(**kwargs):
 
     util.logger.debug(f'>>> Found {sample_count} samples in {input_file}')
 
-    chunkcounts = util.dynamic_chunkcount(sample_count, threshold=kwargs['threshold'])
+    chunkcounts = util.dynamic_chunkcount(
+        sample_count, threshold=kwargs['threshold'])
 
     total_lines = pd.read_csv(input_file).size
 
@@ -54,20 +56,20 @@ def main(**kwargs):
     with makejob_conf.open('w') as conf:
         stat_shells = None
         for stat_shell in util.generate_stat_shell(chunkcounts=chunkcounts,
-                                              total_lines=total_lines,
-                                              input_file=input_file,
-                                              shell_dir=shell_dir,
-                                              result_dir=result_dir,
-                                              start_col=start_col,
-                                              sep=sep):
+                                                   total_lines=total_lines,
+                                                   input_file=input_file,
+                                                   shell_dir=shell_dir,
+                                                   result_dir=result_dir,
+                                                   start_col=start_col,
+                                                   sep=sep):
             conf.write(f'{stat_shell} 1G\n')
             if stat_shells is None:
                 stat_shells = str(stat_shell)
             else:
                 stat_shells += f',{stat_shell}'
 
-
-        plot_shell = util.generate_plot_shell(result_dir=result_dir, shell_dir=shell_dir)
+        plot_shell = util.generate_plot_shell(
+            result_dir=result_dir, shell_dir=shell_dir)
         conf.write(f'{plot_shell} 1G {stat_shells}\n')
 
     if job:

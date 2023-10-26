@@ -37,7 +37,7 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv'):
 
         for p in (result_dir.glob('[xy]*')):
             share_type = p.name[0]
-            share_type = 'core' if share_type == 'x' else 'span'
+            share_type = 'core' if share_type == 'x' else 'pan'
             share_count = p.name[1:]
 
             sum_df = None

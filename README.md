@@ -93,3 +93,45 @@ examples:
     combos_stat batch -i input.txt -t 200000 -O out
     combos_stat batch -i input.txt -t 200000 --job run.job
 ```
+
+## Result
+***prefix***
+- x: intersection
+- y: union
+
+`shell directory`
+```
+shell/
+├── plot.sh
+├── x2
+│   └──stat.x2_1.sh
+├── y2
+│   └──stat.y2_1.sh
+...
+├── x14
+│   ├── stat.x14_1.sh
+│   ├── stat.x14_2.sh
+│   ├── ...
+│   └── stat.x14_100.sh
+...
+└── y29
+    └──stat.y29_1.sh
+```
+
+`result directory`
+```
+result/
+├── x2
+│   └──x2_1.txt
+├── y2
+│   └──y2_1.txt
+...
+├── x14
+│   ├── x14_1.txt
+│   ├── x14_2.txt
+│   ├── ...
+│   └── x14_100.txt
+...
+└── y29
+    └──y29_1.txt
+```

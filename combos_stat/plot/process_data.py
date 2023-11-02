@@ -1,3 +1,4 @@
+from typing import Literal
 from pathlib import Path
 
 import pandas as pd
@@ -5,7 +6,7 @@ import pandas as pd
 from combos_stat import util
 
 
-def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv'):
+def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv', plot_type: Literal['point', 'box'] = 'points'):
     """
     Process and aggregate statistics from result files located in the specified directory.
 
@@ -30,7 +31,10 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv'):
 
     util.logger.debug(f'stat from result dir: {result_dir}')
 
-    columns = 'share_count share_type mean min p25 p50 p75 max'.split()
+    if plot_type == 'point':
+        columns = 'share_count share_type value'.split()
+    else:
+        columns = 'share_count share_type mean min p25 p50 p75 max'.split()
 
     with open(outfile, 'w') as out:
         out.write('\t'.join(columns) + '\n')
@@ -42,15 +46,23 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv'):
 
             sum_df = None
             for file in p.glob('*.txt'):
-                df = pd.read_csv(file, header=None)
+                util.logger.debug(f'stat from file: {file}')
+                df = pd.read_csv(file, header=None, names=['x']).x
                 if sum_df is None:
                     sum_df = df
                 else:
                     sum_df += df
 
-            df_stats = sum_df.describe()[0]
-            lines = [share_count, share_type] + df_stats.loc[['mean', 'min', '25%', '50%', '75%', 'max']].to_list()
-            out.write('\t'.join(map(str, lines)) + '\n')
+            print(sum_df.size)
+
+            if plot_type == 'point':
+                representative_values = util.get_representative_values(sum_df)
+                for value in representative_values:
+                    out.write(f'{share_count}\t{share_type}\t{value}\n')
+            else:
+                df_stats = sum_df.describe()
+                lines = [share_count, share_type] + df_stats.loc[['mean', 'min', '25%', '50%', '75%', 'max']].to_list()
+                out.write('\t'.join(map(str, lines)) + '\n')
 
     util.logger.debug(f'saved aggregated statistics to {outfile}')
 

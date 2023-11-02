@@ -3,6 +3,7 @@ from pathlib import Path
 import textwrap
 from typing import List, Dict
 
+import numpy as np
 from simple_loggers import SimpleLogger
 
 
@@ -97,3 +98,24 @@ def generate_plot_shell(result_dir: Path, shell_dir: Path):
     cmd = f'combos_stat plot {result_dir} --write boxplot.R'
     plot_shell.write_text(cmd)
     return plot_shell
+
+
+def get_representative_values(df, num_splits=30):
+
+    if df.size <= num_splits:
+        return df.tolist()
+
+    # 记录原始的极值
+    min_value = df.min()
+    max_value = df.max()
+
+    # 排序
+    sorted_data = df.sort_values()
+
+    # 使用 numpy.array_split 函数分割数据
+    splits = np.array_split(sorted_data, num_splits)
+
+    # 计算每份的代表值
+    representative_values = [min_value] + [int(split.mean()) for split in splits[1:-1]] + [max_value]
+
+    return representative_values

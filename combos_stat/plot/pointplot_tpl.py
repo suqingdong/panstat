@@ -52,14 +52,14 @@ def generate_r_code(infile='processed_stats.tsv',
                     height=7,
                     **kwargs):
     """
-    Generate R code to create a boxplot visualization using ggplot2.
+    Generate R code to create a pointplot visualization using ggplot2.
 
     This function produces R code based on the provided parameters to read a preprocessed data file,
-    generate a boxplot, and save the resulting visualization as both a PNG and PDF file.
+    generate a pointplot, and save the resulting visualization as both a PNG and PDF file.
 
     Parameters:
     - infile (str, optional): Path to the input CSV file containing preprocessed data. Default is 'processed_stats.tsv'.
-    - output (str, optional): Prefix for the output image filenames. Default is 'boxplot'.
+    - output (str, optional): Prefix for the output image filenames. Default is 'points'.
     - x_lab (str, optional): Label for the x-axis. Default is 'Genomes'.
     - y_lab (str, optional): Label for the y-axis. Default is 'Families'.
     - title (str, optional): Title for the plot. Default is ''.

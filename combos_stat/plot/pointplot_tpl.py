@@ -42,7 +42,7 @@ cat('\\x1b[32msaved pdf file to: ${output}.pdf\\x1b[0m\\n')
 
 
 def generate_r_code(infile='processed_stats.tsv',
-                    output='points',
+                    output='pointplot',
                     x_lab='Genomes',
                     y_lab='Families',
                     title='',
@@ -59,11 +59,11 @@ def generate_r_code(infile='processed_stats.tsv',
 
     Parameters:
     - infile (str, optional): Path to the input CSV file containing preprocessed data. Default is 'processed_stats.tsv'.
-    - output (str, optional): Prefix for the output image filenames. Default is 'points'.
+    - output (str, optional): Prefix for the output image filenames. Default is 'pointplot'.
     - x_lab (str, optional): Label for the x-axis. Default is 'Genomes'.
     - y_lab (str, optional): Label for the y-axis. Default is 'Families'.
     - title (str, optional): Title for the plot. Default is ''.
-    - title (str, optional): Title for the legend. Default is 'Type'.
+    - legend_title (str, optional): Title for the legend. Default is 'Type'.
     - dpi (int, optional): Resolution for the saved images. Default is 300.
     - width (int, optional): Width of the saved images in inches. Default is 14.
     - height (int, optional): Height of the saved images in inches. Default is 7.

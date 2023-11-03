@@ -68,8 +68,7 @@ def main(**kwargs):
             else:
                 stat_shells += f',{stat_shell}'
 
-        plot_shell = util.generate_plot_shell(
-            result_dir=result_dir, shell_dir=shell_dir)
+        plot_shell = util.generate_plot_shell(result_dir=result_dir, shell_dir=shell_dir)
         conf.write(f'{plot_shell} 1G {stat_shells}\n')
 
     if job:

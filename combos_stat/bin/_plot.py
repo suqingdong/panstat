@@ -14,13 +14,13 @@ __epilog__ = click.style('''\n
 examples:
     combos_stat plot -h
     combos_stat plot out/result
-    combos_stat plot out/result --write boxplot.R
-    combos_stat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
+    combos_stat plot out/result --write pointplot.R
+    combos_stat plot out/result --write pointplot.R --option x_lab=XXX --option width=30 --option dpi=500
 
 \b
 default options:
     infile = 'processed_stats.tsv'
-    output = 'boxplot'
+    output = 'pointplot'
     x_lab = 'Genomes'
     y_lab = 'Families'
     title = ''
@@ -34,7 +34,7 @@ default options:
 @click.command(
     name='plot',
     no_args_is_help=True,
-    help=click.style('Generate Boxplot with statistics results',
+    help=click.style('Generate Boxplot/Pointplot with statistics results',
                      italic=True, fg='blue'),
     epilog=__epilog__,
 )
@@ -75,7 +75,7 @@ def main(**kwargs):
 
     try:
         cmd = f'{r_script} {kwargs["write"]}'
-        util.logger.debug(f'Drawing boxplot ...')
+        util.logger.debug(f'Drawing {plot_type}plot ...')
         assert not os.system(cmd)
     except Exception as e:
         print('ERROR', e)

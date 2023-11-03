@@ -58,7 +58,7 @@ def generate_r_code(infile='processed_stats.tsv',
     - x_lab (str, optional): Label for the x-axis. Default is 'Genomes'.
     - y_lab (str, optional): Label for the y-axis. Default is 'Families'.
     - title (str, optional): Title for the plot. Default is 'BoxPlot'.
-    - title (str, optional): Title for the legend. Default is 'Type'.
+    - legend_title (str, optional): Title for the legend. Default is 'Type'.
     - dpi (int, optional): Resolution for the saved images. Default is 300.
     - width (int, optional): Width of the saved images in inches. Default is 14.
     - height (int, optional): Height of the saved images in inches. Default is 7.

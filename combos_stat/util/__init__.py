@@ -1,8 +1,9 @@
 import math
 from pathlib import Path
 import textwrap
-from typing import List, Dict
+from typing import Literal, Dict
 
+import pandas as pd
 import numpy as np
 from simple_loggers import SimpleLogger
 
@@ -77,45 +78,51 @@ def generate_stat_shell(chunkcounts: Dict[int, int],
                 ''')
                 stat_shell.write_text(cmd)
                 yield stat_shell
+    
 
-
-def generate_plot_shell(result_dir: Path, shell_dir: Path):
+def generate_plot_shell(result_dir: Path, shell_dir: Path, plot_type: Literal['point', 'box'] = 'point'):
     """
-    Generate a shell script for plotting results using the `combos_stat` command.
+    Generate a shell to plot the results.
 
-    This function creates a shell script that will execute the `combos_stat plot` command 
-    with the specified result directory. The generated script will be saved in the provided shell directory.
-
-    Parameters:
-    - result_dir (Path): Directory containing the result files to be plotted.
-    - shell_dir (Path): Directory where the generated shell script will be saved.
+    Args:
+        result_dir: The directory where the results are stored.
+        shell_dir: The directory where the shell will be stored.
+        plot_type: The type of plot to generate.
 
     Returns:
-    - Path: Path to the generated shell script.
+        A Path object to the shell.
     """
-
     plot_shell = shell_dir / 'plot.sh'
-    cmd = f'combos_stat plot {result_dir} --write boxplot.R'
+    cmd = f'combos_stat plot {result_dir} --write plot.R --plot-type {plot_type}'
     plot_shell.write_text(cmd)
     return plot_shell
 
 
-def get_representative_values(df, num_splits=30):
+def get_representative_values(df: pd.DataFrame, num_splits: int=30):
+    """
+    This function takes a pandas DataFrame and an optional number of splits (default is 30) as input. It calculates the representative values for the given DataFrame by splitting the data into the specified number of parts, taking the mean of each part, and finding the minimum and maximum values. The representative values are returned as a list.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
+        num_splits (int, optional): The number of splits to use for calculating representative values. Default is 30.
+
+    Returns:
+        list: A list of representative values.
+    """
 
     if df.size <= num_splits:
         return df.tolist()
 
-    # 记录原始的极值
+    # Record the original minimum and maximum values
     min_value = df.min()
     max_value = df.max()
 
-    # 排序
     sorted_data = df.sort_values()
 
-    # 使用 numpy.array_split 函数分割数据
+    # Split the data into the specified number of parts
     splits = np.array_split(sorted_data, num_splits)
 
-    # 计算每份的代表值
+    # Calculate the representative values
     representative_values = [min_value] + [int(split.mean()) for split in splits[1:-1]] + [max_value]
 
     return representative_values

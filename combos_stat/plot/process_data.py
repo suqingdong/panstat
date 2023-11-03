@@ -18,6 +18,7 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv', plot
     - result_dir (str): The path to the directory containing the result subdirectories and files.
     - outfile (str, optional): The name of the output file to which the aggregated statistics will be written.
                                Default is 'processed_stats.tsv'.
+    - plot_type (str, optional): The type of plot to use for the aggregated statistics.
 
     Returns:
     - str: The name of the output file with aggregated statistics.

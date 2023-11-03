@@ -27,12 +27,15 @@ examples:
 @click.option('-s', '--start-col', help='Column index to start reading sample data from', default=1, show_default=True, type=int)
 @click.option('-t', '--threshold', help='The threshold to divide the combinations', type=int, default=200000, show_default=True)
 @click.option('-O', '--output-dir', help='Path to the output directory', type=click.Path(), default='.', show_default=True)
+@click.option('-T', '--plot-type', help='The type of plot', type=click.Choice(['point', 'box']), default='point', show_default=True,
+              show_choices=True)
 @click.option('--job', help='Generate SJM Job')
 @click.option('--no-check', help='Do not check queues for SJM', is_flag=True)
 def main(**kwargs):
 
     input_file = kwargs['input_file']
     start_col = kwargs['start_col']
+    plot_type = kwargs['plot_type']
     sep = kwargs['sep']
     job = kwargs['job']
 
@@ -41,8 +44,7 @@ def main(**kwargs):
 
     util.logger.debug(f'>>> Found {sample_count} samples in {input_file}')
 
-    chunkcounts = util.dynamic_chunkcount(
-        sample_count, threshold=kwargs['threshold'])
+    chunkcounts = util.dynamic_chunkcount(sample_count, threshold=kwargs['threshold'])
 
     total_lines = pd.read_csv(input_file).size
 
@@ -68,7 +70,7 @@ def main(**kwargs):
             else:
                 stat_shells += f',{stat_shell}'
 
-        plot_shell = util.generate_plot_shell(result_dir=result_dir, shell_dir=shell_dir)
+        plot_shell = util.generate_plot_shell(result_dir=result_dir, shell_dir=shell_dir, plot_type=plot_type)
         conf.write(f'{plot_shell} 1G {stat_shells}\n')
 
     if job:

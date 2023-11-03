@@ -16,6 +16,7 @@ examples:
     combos_stat plot out/result
     combos_stat plot out/result --write pointplot.R
     combos_stat plot out/result --write pointplot.R --option x_lab=XXX --option width=30 --option dpi=500
+    combos_stat plot out/result --write boxplot.R --plot-type box 
 
 \b
 default options:

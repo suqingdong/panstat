@@ -6,10 +6,10 @@ from typing import Iterable, Literal, Optional, Tuple, Union, Set, Dict
 import tqdm
 import pandas as pd
 
-from combos_stat import util
+from panstat import util
 
 
-class CombosStat(object):
+class PanStat(object):
     """
     A utility class to compute shared data statistics for given combinations of data samples.
 
@@ -152,17 +152,3 @@ class CombosStat(object):
             f.writelines(buffer)
 
         util.logger.info(f'saved to file: {output_path}')
-
-
-if __name__ == '__main__':
-    combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection')
-    util.logger.debug('start normal mode')
-    results = combos.compute()
-    list(results)
-    util.logger.debug('complete normal mode')
-
-    combos = CombosStat(input_file='tests/family.stat', num_samples=3, share_type='intersection', chunksize=100, chunk=20)
-    util.logger.debug('start chunk mode')
-    results = combos.compute()
-    list(results)
-    util.logger.debug('complete chunk mode')

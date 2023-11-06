@@ -1,2 +1,2 @@
-include combos_stat/version.json
-include combos_stat/banner.txt
+include panstat/version.json
+include panstat/banner.txt

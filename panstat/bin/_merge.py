@@ -6,7 +6,7 @@ from pathlib import Path
 __epilog__ = click.style('''\n
 \b
 examples:
-    combos_stat plot -h
+    panstat plot -h
 ''', fg='green')
 
 @click.command(

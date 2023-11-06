@@ -1,18 +1,18 @@
-# CombosStat: A utility tool designed to compute shared data statistics for given combinations of data samples
+# PanStat: A Python toolkit for the statistical analysis and visualization of core and pan-genomic genes in Pan-genome
 
 ## Installation
 ```bash
-python3 -m pip install combos_stat
+python3 -m pip install panstat
 ```
 
 ## Usage
 ```bash
-combos_stat -h
+panstat -h
 ```
 
 ### *`1. stat`*
 ```
-Usage: python -m combos_stat.bin.main stat [OPTIONS]
+Usage: panstat stat [OPTIONS]
 
   Calculate statistics for shared data counts based on combinations of samples.
 
@@ -32,14 +32,14 @@ Options:
 
 
 examples:
-    combos_stat stat -h
-    combos_stat stat -i input.txt -o output.txt -n 13 -t intersection
-    combos_stat stat -i input.txt -o output.txt -n 13 -t intersection --chunksize 100 --chunk 2 [read 101-200 lines]
+    panstat stat -h
+    panstat stat -i input.txt -o output.txt -n 13 -t intersection
+    panstat stat -i input.txt -o output.txt -n 13 -t intersection --chunksize 100 --chunk 2 [read 101-200 lines]
 ```
 
 ### *`2. plot`*
 ```bash
-Usage: python -m combos_stat.bin.main plot [OPTIONS] RESULT_DIR
+Usage: panstat plot [OPTIONS] RESULT_DIR
 
   Generate Boxplot with statistics results
 
@@ -53,10 +53,10 @@ Options:
   
 
 examples:
-    combos_stat plot -h
-    combos_stat plot out/result
-    combos_stat plot out/result --write boxplot.R
-    combos_stat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
+    panstat plot -h
+    panstat plot out/result
+    panstat plot out/result --write boxplot.R
+    panstat plot out/result --write boxplot.R --option x_lab=XXX --option width=30 --option dpi=500
                           
 default options:
     infile = 'processed_stats.tsv'
@@ -73,7 +73,7 @@ default options:
 
 ### *`3. batch`*
 ```bash
-Usage: python -m combos_stat.bin.main batch [OPTIONS]
+Usage: panstat batch [OPTIONS]
 
   Generate batch shells and SJM job
 
@@ -89,9 +89,9 @@ Options:
 
 
 examples:
-    combos_stat batch -h
-    combos_stat batch -i input.txt -t 200000 -O out
-    combos_stat batch -i input.txt -t 200000 --job run.job
+    panstat batch -h
+    panstat batch -i input.txt -t 200000 -O out
+    panstat batch -i input.txt -t 200000 --job run.job
 ```
 
 ## Result

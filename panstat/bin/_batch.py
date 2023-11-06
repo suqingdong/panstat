@@ -4,15 +4,15 @@ import pathlib
 import click
 import pandas as pd
 
-from combos_stat import util
+from panstat import util
 
 
 __epilog__ = click.style('''\n
 \b
 examples:
-    combos_stat batch -h
-    combos_stat batch -i input.txt -t 200000 -O out
-    combos_stat batch -i input.txt -t 200000 --job run.job
+    panstat batch -h
+    panstat batch -i input.txt -t 200000 -O out
+    panstat batch -i input.txt -t 200000 --job run.job
 ''', fg='green')
 
 

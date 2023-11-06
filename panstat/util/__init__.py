@@ -8,7 +8,7 @@ import numpy as np
 from simple_loggers import SimpleLogger
 
 
-logger = SimpleLogger('CombosStat')
+logger = SimpleLogger('PanStat')
 
 
 def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, int]:
@@ -34,7 +34,7 @@ def generate_stat_shell(chunkcounts: Dict[int, int],
     """
     Generate shell scripts for statistical analysis based on input parameters.
 
-    This function produces shell scripts that will execute the `combos_stat` command with specific
+    This function produces shell scripts that will execute the `panstat` command with specific
     parameters, including input file, output file, column starting position, separator, number of samples,
     share type, chunk size, and chunk number. The generated scripts will be placed in specified directories.
 
@@ -66,7 +66,7 @@ def generate_stat_shell(chunkcounts: Dict[int, int],
                 output_file = result_dir / f'{prefix}{num_samples}' / f'{prefix}{num_samples}_{chunk}.txt'
                 stat_shell.parent.mkdir(parents=True, exist_ok=True)
                 cmd = textwrap.dedent(f'''\
-                    combos_stat stat \\
+                    panstat stat \\
                         -i {Path(input_file).resolve()} \\
                         -o {output_file} \\
                         --start-col {start_col} \\
@@ -93,7 +93,7 @@ def generate_plot_shell(result_dir: Path, shell_dir: Path, plot_type: Literal['p
         A Path object to the shell.
     """
     plot_shell = shell_dir / 'plot.sh'
-    cmd = f'combos_stat plot {result_dir} --write plot.R --plot-type {plot_type}'
+    cmd = f'panstat plot {result_dir} --write plot.R --plot-type {plot_type}'
     plot_shell.write_text(cmd)
     return plot_shell
 

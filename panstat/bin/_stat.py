@@ -1,15 +1,15 @@
 
 import click
 
-from combos_stat.stat import CombosStat
+from panstat.stat import PanStat
 
 
 __epilog__ = click.style('''\n
 \b
 examples:
-    combos_stat stat -h
-    combos_stat stat -i input.txt -o output.txt -n 13 -t intersection
-    combos_stat stat -i input.txt -o output.txt -n 13 -t intersection --chunksize 100 --chunk 2 [read 101-200 lines]
+    panstat stat -h
+    panstat stat -i input.txt -o output.txt -n 13 -t intersection
+    panstat stat -i input.txt -o output.txt -n 13 -t intersection --chunksize 100 --chunk 2 [read 101-200 lines]
 ''', fg='green')
 
 @click.command(
@@ -29,6 +29,6 @@ examples:
 @click.option('--chunksize', help='The chunksize lines to read', type=int)
 @click.option('--chunk', help='The index of chunk', type=int)
 def main(**kwargs):
-    combos = CombosStat(**kwargs)
-    results = combos.compute()
-    combos.save(results, kwargs['output_file'])
+    ps = PanStat(**kwargs)
+    results = ps.compute()
+    ps.save(results, kwargs['output_file'])

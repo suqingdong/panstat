@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from combos_stat import util
+from panstat import util
 
 
 def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv', plot_type: Literal['point', 'box'] = 'points'):

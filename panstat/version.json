@@ -1,0 +1,8 @@
+{
+    "prog": "panstat",
+    "desc": "A Python toolkit for the statistical analysis and visualization of core and pan-genomic genes in Pan-genome",
+    "url": "https://github.com/suqingdong/panstat",
+    "author": "suqingdong",
+    "author_email": "suqingdong1114@gmail.com",
+    "version": "1.0.1"
+}

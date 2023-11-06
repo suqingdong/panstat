@@ -3,20 +3,20 @@ import os
 import click
 import textwrap
 
-from combos_stat.plot.boxplot_tpl import generate_r_code as generate_boxplot_r_code
-from combos_stat.plot.pointplot_tpl import generate_r_code as generate_pointplot_r_code
-from combos_stat.plot.process_data import stat_from_result
-from combos_stat import util
+from panstat.plot.boxplot_tpl import generate_r_code as generate_boxplot_r_code
+from panstat.plot.pointplot_tpl import generate_r_code as generate_pointplot_r_code
+from panstat.plot.process_data import stat_from_result
+from panstat import util
 
 
 __epilog__ = click.style('''\n
 \b
 examples:
-    combos_stat plot -h
-    combos_stat plot out/result
-    combos_stat plot out/result --write pointplot.R
-    combos_stat plot out/result --write pointplot.R --option x_lab=XXX --option width=30 --option dpi=500
-    combos_stat plot out/result --write boxplot.R --plot-type box 
+    panstat plot -h
+    panstat plot out/result
+    panstat plot out/result --write pointplot.R
+    panstat plot out/result --write pointplot.R --option x_lab=XXX --option width=30 --option dpi=500
+    panstat plot out/result --write boxplot.R --plot-type box 
 
 \b
 default options:

@@ -1,6 +1,6 @@
 import click
 
-from combos_stat import version_info, __banner__
+from panstat import version_info, __banner__
 from ._stat import main as stat_cli
 from ._plot import main as plot_cli
 from ._batch import main as batch_cli

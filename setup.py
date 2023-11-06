@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 BASE_DIR = Path(__file__).resolve().parent
-version_info = json.load(BASE_DIR.joinpath('combos_stat', 'version.json').open())
+version_info = json.load(BASE_DIR.joinpath('panstat', 'version.json').open())
 
 setup(
     name=version_info['prog'],
@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={'console_scripts': [
-        'combos_stat = combos_stat.bin.main:main',
+        'panstat = panstat.bin.main:main',
     ]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',

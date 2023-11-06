@@ -14,7 +14,7 @@ panstat -h
 ```
 Usage: panstat stat [OPTIONS]
 
-  Calculate statistics for shared data counts based on combinations of samples.
+  Calculate statistics for core and pan genes
 
 Options:
   -i, --input-file PATH           Path to the input data file  [required]
@@ -96,8 +96,8 @@ examples:
 
 ## Result
 ***prefix***
-- x: intersection
-- y: union
+- x: core genes (intersection)
+- y: pan genes (union)
 
 `shell directory`
 ```
@@ -118,7 +118,7 @@ shell/
     └──stat.y29_1.sh
 ```
 
-`result directory`
+`statistical result`
 ```
 result/
 ├── x2
@@ -134,4 +134,12 @@ result/
 ...
 └── y29
     └──y29_1.txt
+```
+
+`visualization result`
+```
+processed_stats.tsv
+plot.R
+pointplot.png
+pointplot.pdf
 ```

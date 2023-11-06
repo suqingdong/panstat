@@ -38,8 +38,8 @@ cat('\\x1b[32msaved pdf file to: ${output}.pdf\\x1b[0m\\n')
 
 def generate_r_code(infile='processed_stats.tsv',
                     output='boxplot',
-                    x_lab='Genomes',
-                    y_lab='Families',
+                    x_lab='Number of genomes',
+                    y_lab='Number of gene families',
                     title='',
                     legend_title='Type',
                     dpi=300,

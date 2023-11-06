@@ -15,7 +15,7 @@ examples:
 @click.command(
     name='stat',
     no_args_is_help=True,
-    help=click.style('Calculate statistics for shared data counts based on combinations of samples.', italic=True, fg='blue'),
+    help=click.style('Calculate statistics for core and pan genes', italic=True, fg='blue'),
     epilog=__epilog__,
 )
 @click.option('-i', '--input-file', help='Path to the input data file', type=click.Path(exists=True), required=True)

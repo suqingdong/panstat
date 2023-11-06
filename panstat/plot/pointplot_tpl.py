@@ -11,11 +11,7 @@ legend_title <- '${legend_title}'
 data <- read.csv('${infile}', sep='\\t', check.names=F)
 
 p <- ggplot(data, aes(x=as.factor(share_count), y=value, color=share_type, shape=share_type)) +
-    geom_point(alpha=0.6, size=3) +  # 设置点的透明度和大小                     
-    scale_shape_manual(
-        values=c(16, 17)    # 实心：16是圆形，17是三角形
-        # values=c(1, 2)      # 空心：1是圆形，2是三角形
-    ) + 
+    geom_point(alpha=0.6, size=3) +                     
     geom_smooth(
         aes(y=value, group=share_type, color=share_type),
         method='loess',
@@ -31,7 +27,7 @@ p <- ggplot(data, aes(x=as.factor(share_count), y=value, color=share_type, shape
         axis.line=element_line(colour='black')
     ) +
     scale_color_manual(name=legend_title, values=default_colors) +
-    scale_fill_manual(name=legend_title, values=default_colors)
+    scale_shape_manual(name=legend_title, values=c(16, 17))
 
 ggsave(filename='${output}.png', plot=p, dpi=${dpi}, type='cairo', width=${width}, height=${height})
 cat('\\x1b[32msaved png file to: ${output}.png\\x1b[0m\\n')
@@ -43,8 +39,8 @@ cat('\\x1b[32msaved pdf file to: ${output}.pdf\\x1b[0m\\n')
 
 def generate_r_code(infile='processed_stats.tsv',
                     output='pointplot',
-                    x_lab='Genomes',
-                    y_lab='Families',
+                    x_lab='Number of genomes',
+                    y_lab='Number of gene families',
                     title='',
                     legend_title='Type',
                     dpi=300,

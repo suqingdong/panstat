@@ -1,4 +1,4 @@
-# PanStat: A Python toolkit for the statistical analysis and visualization of core and pan-genomic genes in Pan-genome
+# PanStat: A Python toolkit for the statistical and visualization of core and pan genes in Pan-genome
 
 ## Installation
 ```bash

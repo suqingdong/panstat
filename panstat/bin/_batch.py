@@ -5,6 +5,7 @@ import click
 import pandas as pd
 
 from panstat import util
+from panstat.util import shell
 
 
 __epilog__ = click.style('''\n
@@ -13,6 +14,7 @@ examples:
     panstat batch -h
     panstat batch -i input.txt -t 200000 -O out
     panstat batch -i input.txt -t 200000 --job run.job
+    panstat batch -i input.txt -t 200000 --job run.job --no-check
 ''', fg='green')
 
 
@@ -27,6 +29,7 @@ examples:
 @click.option('-s', '--start-col', help='Column index to start reading sample data from', default=1, show_default=True, type=int)
 @click.option('-t', '--threshold', help='The threshold to divide the combinations', type=int, default=200000, show_default=True)
 @click.option('-O', '--output-dir', help='Path to the output directory', type=click.Path(), default='.', show_default=True)
+@click.option('--merge-dir', help='Path to the merge directory', type=click.Path(), default='merge', show_default=True)
 @click.option('-T', '--plot-type', help='The type of plot', type=click.Choice(['point', 'box']), default='point', show_default=True,
               show_choices=True)
 @click.option('--job', help='Generate SJM Job')
@@ -36,6 +39,7 @@ def main(**kwargs):
     input_file = kwargs['input_file']
     start_col = kwargs['start_col']
     plot_type = kwargs['plot_type']
+    merge_dir = kwargs['merge_dir']
     sep = kwargs['sep']
     job = kwargs['job']
 
@@ -57,7 +61,7 @@ def main(**kwargs):
 
     with makejob_conf.open('w') as conf:
         stat_shells = None
-        for stat_shell in util.generate_stat_shell(chunkcounts=chunkcounts,
+        for stat_shell in shell.generate_stat_shell(chunkcounts=chunkcounts,
                                                    total_lines=total_lines,
                                                    input_file=input_file,
                                                    shell_dir=shell_dir,
@@ -70,9 +74,17 @@ def main(**kwargs):
             else:
                 stat_shells += f',{stat_shell}'
 
-        plot_shell = util.generate_plot_shell(result_dir=result_dir, shell_dir=shell_dir, plot_type=plot_type)
-        conf.write(f'{plot_shell} 1G {stat_shells}\n')
+        merge_shell = shell.generate_merge_shell(result_dir=result_dir,
+                                                 shell_dir=shell_dir,
+                                                 merge_dir=merge_dir)
+        conf.write(f'{merge_shell} 1G {stat_shells}\n')
 
+        plot_shell = shell.generate_plot_shell(result_dir=merge_dir,
+                                               shell_dir=shell_dir,
+                                               plot_type=plot_type,
+                                               processed_file=f'processed_stats.{plot_type}.tsv')
+        conf.write(f'{plot_shell} 1G {merge_shell}\n')
+        
     if job:
         cmd = f'makejob {makejob_conf} -o {job}'
         if kwargs['no_check']:

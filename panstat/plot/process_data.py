@@ -54,7 +54,7 @@ def stat_from_result(result_dir: str, outfile: str = 'processed_stats.tsv', plot
                 else:
                     sum_df += df
 
-            print(sum_df.size)
+            # print(sum_df)
 
             if plot_type == 'point':
                 representative_values = util.get_representative_values(sum_df)

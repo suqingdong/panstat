@@ -62,7 +62,7 @@ def main(**kwargs):
     plot_type = kwargs['plot_type']
 
     options = dict(option.split('=') for option in kwargs['option'])
-    processed_file = options.get('infile', 'processed_stats.tsv')
+    processed_file = options.get('infile', f'processed_stats.{plot_type}.tsv')
 
     stat_from_result(kwargs['result_dir'], outfile=processed_file, plot_type=plot_type)
     if plot_type == 'point':

@@ -4,6 +4,7 @@ from panstat import version_info, __banner__
 from ._stat import main as stat_cli
 from ._plot import main as plot_cli
 from ._batch import main as batch_cli
+from ._merge import main as merge_cli
 
 
 CONTEXT_SETTINGS = dict(
@@ -35,6 +36,7 @@ def main():
     cli.add_command(stat_cli)
     cli.add_command(plot_cli)
     cli.add_command(batch_cli)
+    cli.add_command(merge_cli)
     cli()
 
 

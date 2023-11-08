@@ -19,7 +19,7 @@ def dynamic_chunkcount(sample_count: int, threshold: int = 50000) -> Dict[int, i
     num_samples = list(range(2, sample_count + 1))
     combinations = [math.comb(sample_count, i) for i in num_samples]
 
-    chunkcounts = [comb // threshold or 1 for comb in combinations]
+    chunkcounts = [math.ceil(comb / threshold) for comb in combinations]
 
     return dict(zip(num_samples, chunkcounts))
 

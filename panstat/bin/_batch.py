@@ -14,6 +14,7 @@ examples:
     panstat batch -h
     panstat batch -i input.txt -t 200000 -O out
     panstat batch -i input.txt -t 200000 --job run.job
+    panstat batch -i input.txt -t 200000 --job run.job --point-type box
     panstat batch -i input.txt -t 200000 --job run.job --no-check
 ''', fg='green')
 
@@ -39,7 +40,6 @@ def main(**kwargs):
     input_file = kwargs['input_file']
     start_col = kwargs['start_col']
     plot_type = kwargs['plot_type']
-    merge_dir = kwargs['merge_dir']
     sep = kwargs['sep']
     job = kwargs['job']
 
@@ -53,6 +53,7 @@ def main(**kwargs):
     total_lines = pd.read_csv(input_file).size
 
     output_dir = pathlib.Path(kwargs['output_dir']).resolve()
+    merge_dir = pathlib.Path(kwargs['merge_dir']).resolve()
 
     shell_dir = output_dir / 'shell'
     result_dir = output_dir / 'result'

@@ -1,7 +1,5 @@
 
-import os
 import click
-import textwrap
 
 from panstat.util.merge import merge_result
 
@@ -10,6 +8,7 @@ __epilog__ = click.style('''\n
 \b
 examples:
     panstat merge -h
+    panstat merge result -o merge_result
 ''', fg='green')
 
 

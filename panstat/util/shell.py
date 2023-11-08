@@ -75,7 +75,7 @@ def generate_merge_shell(result_dir: Path, shell_dir: Path, merge_dir: str = 'me
         A Path object to the shell.
     """
     merge_shell = shell_dir / 'merge.sh'
-    cmd = f'panstat merge {result_dir} -o {merge_dir}'
+    cmd = f'panstat merge {result_dir} -o {merge_dir}\n'
     merge_shell.write_text(cmd)
     return merge_shell
 
@@ -91,11 +91,17 @@ def generate_plot_shell(result_dir: Path,
         result_dir: The directory where the results are stored.
         shell_dir: The directory where the shell will be stored.
         plot_type: The type of plot to generate.
+        processed_file: The processed file.
 
     Returns:
         A Path object to the shell.
     """
     plot_shell = shell_dir / 'plot.sh'
-    cmd = f'panstat plot {result_dir} --write {plot_type}_plot.R --plot-type {plot_type} --option infile={processed_file}'
+    cmd = textwrap.dedent(f'''
+        panstat plot {result_dir} \\
+            --write {plot_type}_plot.R \\
+            --plot-type {plot_type} \\
+            --option infile={processed_file}
+    ''')
     plot_shell.write_text(cmd)
     return plot_shell

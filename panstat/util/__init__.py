@@ -48,7 +48,7 @@ def get_representative_values(df: pd.DataFrame, num_splits: int=30):
     # Split the data into the specified number of parts
     splits = np.array_split(sorted_data, num_splits)
 
-    # Calculate the representative values
+    # Calculate the representative values (mean)
     representative_values = [min_value] + [int(split.mean()) for split in splits[1:-1]] + [max_value]
 
     return representative_values

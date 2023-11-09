@@ -66,9 +66,9 @@ def main(**kwargs):
 
     stat_from_result(kwargs['result_dir'], outfile=processed_file, plot_type=plot_type)
     if plot_type == 'point':
-        r_code = generate_pointplot_r_code(infile=processed_file, **options)
+        r_code = generate_pointplot_r_code(**{'infile': processed_file, **options})
     else:
-        r_code = generate_boxplot_r_code(infile=processed_file, **options)
+        r_code = generate_boxplot_r_code(**{'infile': processed_file, **options})
 
     with open(kwargs['write'], 'w') as f:
         f.write(r_code)

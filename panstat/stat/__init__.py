@@ -61,7 +61,6 @@ class PanStat(object):
 
         if self.header == 0:
             header_row = pd.read_csv(self.input_file, sep=self.sep, nrows=1).columns
-            print(header_row, header_row.size)
             usecols = range(header_row.size)
         else:
             usecols = None

@@ -1,6 +1,6 @@
 from pathlib import Path
 from functools import partial
-from multiprocess import Pool
+from multiprocessing import Pool
 
 import numpy as np
 

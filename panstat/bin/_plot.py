@@ -79,4 +79,4 @@ def main(**kwargs):
         util.logger.debug(f'Drawing {plot_type}plot ...')
         assert not os.system(cmd)
     except Exception as e:
-        print('ERROR', e)
+        util.logger.debug(f'{e}')

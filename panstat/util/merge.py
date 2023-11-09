@@ -1,6 +1,6 @@
 from pathlib import Path
+from multiprocess import Pool
 
-import pandas as pd
 import numpy as np
 
 from . import logger
@@ -12,19 +12,22 @@ def merge_result(result_dir: str, merge_dir: str = 'merge'):
     logger.debug(f'stat from result dir: {result_dir}')
 
     for p in (result_dir.glob('[xy]*')):
+        logger.debug(f'merge result for: {p.name}')
 
         out_path = Path(merge_dir) / p.name / f'{p.name}.txt'
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
-        sum_df = None
+        sum_data = None
         for file in p.glob('*.txt'):
-
-            logger.debug(f'stat from file: {file}')
-            df = pd.read_csv(file, header=None, names=['x']).x
-            if sum_df is None:
-                sum_df = df
+            logger.debug(f'read file: {file.name}')
+            data = np.loadtxt(file, dtype=np.int64)
+            if sum_data is None:
+                sum_data = data
             else:
-                sum_df += df
+                sum_data += data
 
-        sum_df.to_csv(out_path, header=False, index=False)
+        with out_path.open('w') as out:
+            for line in sum_data:
+                out.write(f'{line}\n')
+
         logger.debug(f'saved merged results to {out_path}')

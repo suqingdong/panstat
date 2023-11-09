@@ -23,7 +23,7 @@ def merge_path_result(merge_dir: str, path: Path):
         else:
             sum_data += data
 
-    np.savetxt(out_path, sum_data, fmt='%d')
+    np.savetxt(out_path, sum_data.reshape(-1), fmt='%d')
 
     logger.debug(f'saved merged results to {out_path}')
 

@@ -28,8 +28,6 @@ def merge_path_result(merge_dir: str, path: Path):
     logger.debug(f'saved merged results to {out_path}')
 
 
-
-
 def merge_result(result_dir: str, merge_dir: str = 'merge'):
     result_dir = Path(result_dir)
 

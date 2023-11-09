@@ -83,7 +83,8 @@ def generate_merge_shell(result_dir: Path, shell_dir: Path, merge_dir: str = 'me
 def generate_plot_shell(result_dir: Path,
                         shell_dir: Path,
                         plot_type: Literal['point', 'box'] = 'point',
-                        processed_file: str = 'processed_stats.tsv'):
+                        processed_file: str = Path('processed_stats.tsv').resolve(),
+                        output_dir: Path = Path('.').resolve()):
     """
     Generate a shell to plot the results.
 
@@ -97,11 +98,14 @@ def generate_plot_shell(result_dir: Path,
         A Path object to the shell.
     """
     plot_shell = shell_dir / 'plot.sh'
+    r_script = output_dir / f'{plot_type}_plot.R'
+    outfile = output_dir / f'{plot_type}plot'
     cmd = textwrap.dedent(f'''
         panstat plot {result_dir} \\
-            --write {plot_type}_plot.R \\
+            --write {r_script} \\
             --plot-type {plot_type} \\
-            --option infile={processed_file}
+            --option infile={processed_file} \\
+            --option output={outfile}
     ''')
     plot_shell.write_text(cmd)
     return plot_shell

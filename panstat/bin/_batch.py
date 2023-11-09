@@ -1,5 +1,5 @@
 import os
-import pathlib
+from pathlib import Path
 
 import click
 import pandas as pd
@@ -52,23 +52,23 @@ def main(**kwargs):
 
     total_lines = pd.read_csv(input_file).size
 
-    output_dir = pathlib.Path(kwargs['output_dir']).resolve()
-    merge_dir = pathlib.Path(kwargs['merge_dir']).resolve()
+    output_dir = Path(kwargs['output_dir']).resolve()
+    merge_dir = Path(kwargs['merge_dir']).resolve()
 
     shell_dir = output_dir / 'shell'
     result_dir = output_dir / 'result'
 
-    makejob_conf = pathlib.Path('makejob.conf')
+    makejob_conf = Path('makejob.conf')
 
     with makejob_conf.open('w') as conf:
         stat_shells = None
         for stat_shell in shell.generate_stat_shell(chunkcounts=chunkcounts,
-                                                   total_lines=total_lines,
-                                                   input_file=input_file,
-                                                   shell_dir=shell_dir,
-                                                   result_dir=result_dir,
-                                                   start_col=start_col,
-                                                   sep=sep):
+                                                    total_lines=total_lines,
+                                                    input_file=input_file,
+                                                    shell_dir=shell_dir,
+                                                    result_dir=result_dir,
+                                                    start_col=start_col,
+                                                    sep=sep):
             conf.write(f'{stat_shell} 1G\n')
             if stat_shells is None:
                 stat_shells = str(stat_shell)
@@ -80,10 +80,11 @@ def main(**kwargs):
                                                  merge_dir=merge_dir)
         conf.write(f'{merge_shell} 1G {stat_shells}\n')
 
-        plot_shell = shell.generate_plot_shell(result_dir=merge_dir,
+        plot_shell = shell.generate_plot_shell(output_dir=output_dir,
+                                               result_dir=merge_dir,
                                                shell_dir=shell_dir,
                                                plot_type=plot_type,
-                                               processed_file=f'processed_stats.{plot_type}.tsv')
+                                               processed_file=Path(f'processed_stats.{plot_type}.tsv').resolve())
         conf.write(f'{plot_shell} 1G {merge_shell}\n')
         
     if job:

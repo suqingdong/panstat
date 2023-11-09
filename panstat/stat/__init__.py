@@ -59,13 +59,20 @@ class PanStat(object):
         """
         self.sep = '\t' if self.sep == '\\t' else self.sep
 
+        if self.header == 0:
+            header_row = pd.read_csv(self.input_file, sep=self.sep, nrows=1).columns
+            print(header_row, header_row.size)
+            usecols = range(header_row.size)
+        else:
+            usecols = None
+
         if self.chunk and self.chunksize:
             util.logger.info(f'load data from file: {self.input_file} [chunk: {self.chunk}, chunksize: {self.chunksize}]')
-            chunks = pd.read_csv(self.input_file, header=self.header, sep=self.sep, chunksize=self.chunksize)
+            chunks = pd.read_csv(self.input_file, header=self.header, usecols=usecols, sep=self.sep, chunksize=self.chunksize)
             df = next(itertools.islice(chunks, self.chunk - 1, None))
         else:
             util.logger.info(f'load data from file: {self.input_file}')
-            df = pd.read_csv(self.input_file, header=self.header, sep=self.sep)
+            df = pd.read_csv(self.input_file, header=self.header, usecols=usecols, sep=self.sep)
 
         samples = df.columns[self.start_col:]
         combinations = itertools.combinations(samples, self.num_samples)
